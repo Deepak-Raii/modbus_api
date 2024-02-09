@@ -34,6 +34,10 @@ const {portName,startAddress,quantity,meterId} = data
   }
 });
 
+app.get("/greeting", async(req,res)=>{
+  res.json({"greeting":"Hello Ji..."});
+})
+
 app.listen(5001, () => {
   console.log('Server is running on port 5001');
 });
