@@ -3,17 +3,23 @@ const app = express();
 const SerialPort = require('serialport');
 const Modbus = require("modbus-serial");
 const client = new Modbus();
+const modbusModel = require("./model.js");
+app.use(express.json())
 
-app.get("/getData", async (req, res) => {
+app.post("/getData", async (req, res) => {
+  const data = await req.body;
+const {portName,startAddress,quantity,meterId} = data
+  console.log("Data : ",data);
+
 
   try {
-    const portName = "/dev/tty.usbserial-AO004ELR";
+    // const portName = portName;
     const baudRate = 9600;
   
     await client.connectRTUBuffered(portName, { baudRate }, async () => {
       console.log("port connected...");
-      await client.setID(170);
-      const data = await client.readHoldingRegisters(12343, 52);
+      await client.setID(meterId);
+      const data = await client.readHoldingRegisters(startAddress, quantity);
       console.log("data : ",data.data);
       res.send(data);
     });
